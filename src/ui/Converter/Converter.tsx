@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getExhangeRate, ListOfCurrenciesType, setNewTotalValue } from '../../bll/converterReducer';
 import { AppRootStateType } from '../../bll/store';
@@ -17,41 +17,45 @@ const Converter = React.memo(() => {
 
 	useEffect(() => {
 		dispatch(getExhangeRate(firstCur, secondCur));
+		dispatch(setNewTotalValue(0));
 	}, [firstCur, secondCur])
 
-	const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+	const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
 		setValue(event.currentTarget.value);
-	}
+	}, [])
 
-	const onFirstSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+	const onFirstSelectChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
 		setFirstCur(event.currentTarget.value);
-	}
-	const onSecondSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+	},[])
+	const onSecondSelectChange = useCallback((event: ChangeEvent<HTMLSelectElement>) => {
 		setSecondCur(event.currentTarget.value);
-	}
-	const onBtnClickChangeValue = () => {
+	},[])
+	const onBtnClickChangeValue = useCallback(() => {
 		dispatch(setNewTotalValue(+value))
-	}
+	},[dispatch, value])
 
 	return (
 		<div className={style.converter}>
-			<div>
-				<input type="text" value={value} onChange={onInputChange} />
-				<select value={firstCur} onChange={onFirstSelectChange}>
-					{fullListOfCurrencies.map((curr, index) => {
-						return (
-							<option key={index}>{`${curr.currencyName}`}</option>
-						)
-					})}
-				</select>
-				<select value={secondCur} onChange={onSecondSelectChange}>
-					{fullListOfCurrencies.map((curr, index) => {
-						return (
-							<option key={index}>{`${curr.currencyName}`}</option>
-						)
-					})}</select>
-				<button onClick={onBtnClickChangeValue}>LET'S GO</button>
-				<span>{exchangeValue}</span>
+			<div className={style.converterWrap}>
+				<h1>CURRENCY CONVERTER:</h1>
+				<div className={style.converterLog}>
+					<input type="number" value={value} onChange={onInputChange} placeholder={'Type a number'} />
+					<select value={firstCur} onChange={onFirstSelectChange}>
+						{fullListOfCurrencies.map((curr, index) => {
+							return (
+								<option key={index}>{`${curr.currencyName}`}</option>
+							)
+						})}
+					</select>
+					<select value={secondCur} onChange={onSecondSelectChange}>
+						{fullListOfCurrencies.map((curr, index) => {
+							return (
+								<option key={index}>{`${curr.currencyName}`}</option>
+							)
+						})}</select>
+					<button className={style.btn} onClick={onBtnClickChangeValue}>LET'S GO</button>
+				</div>
+				<span className={style.totalSum}>Total: {exchangeValue} {firstCur}</span>
 			</div>
 		</div>
 	)

@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import { getCurrencies } from './bll/basicCurrencyReducer';
 import { getFullListOfCurrencies } from './bll/converterReducer';
-import BaseCurrency from './ui/BaseCurrency/BaseCurrency';
+import BaseCurrency from './ui/Header/Header';
 import Body from './ui/Body/Body';
 
 function App() {
@@ -17,7 +17,6 @@ function App() {
 
 	return (
 		<div className="App">
-			{/* <BaseCurrency /> */}
 			<BrowserRouter>
 				<BaseCurrency />
 				<Body />

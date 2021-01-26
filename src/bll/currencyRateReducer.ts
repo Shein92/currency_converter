@@ -10,12 +10,18 @@ const initialState: CurrencyRateType = {
 }
 
 export const currenctRateReducer = (state: CurrencyRateType = initialState, action: ActionsType) => {
-	switch(action.type) {
+	switch (action.type) {
 		case 'SET-CURRENCY-AND-VALUE': {
-			return {...state, currnciesData: [...action.data]}
+			return { ...state, currnciesData: [...action.data] }
 		}
 		case 'SET-FAVORITE-CURRENCIES': {
-			return { ...state, favoriteCurrenciesData: [...state.favoriteCurrenciesData, state.currnciesData[action.index]]}
+			for (let i = 0; i < state.favoriteCurrenciesData.length; i++) {
+				if (state.favoriteCurrenciesData[i].currency === action.curr) {
+					return { ...state }
+				}
+			}
+
+			return { ...state, favoriteCurrenciesData: [...state.favoriteCurrenciesData, ...state.currnciesData.filter(f => f.currency === action.curr)] }
 		}
 		default: {
 			return state
@@ -25,11 +31,11 @@ export const currenctRateReducer = (state: CurrencyRateType = initialState, acti
 
 //Action Creators
 const setCurrencyAndValue = (data: Array<CurrenciesDataType>) => {
-	return {type: 'SET-CURRENCY-AND-VALUE', data} as const
+	return { type: 'SET-CURRENCY-AND-VALUE', data } as const
 }
 
-export const setFavoriteCurrencies = (index: number) => {
-	return {type: 'SET-FAVORITE-CURRENCIES', index} as const
+export const setFavoriteCurrencies = (curr: string) => {
+	return { type: 'SET-FAVORITE-CURRENCIES', curr } as const
 }
 
 //Thunk
@@ -37,18 +43,16 @@ export const getCurrencyAndValue = (baseCurrency: string) => {
 	return (dispatch: Dispatch) => {
 		currency.getCurrenciesAndValue(baseCurrency)
 			.then(res => {
-				const a = res.data.rates;
 				const data = [];
 
-				for (let key in a) {
+				for (let key in res.data.rates) {
 					const newObj = {
 						currency: key,
-						value: a[key]
+						value: res.data.rates[key]
 					}
 					data.push(newObj)
 				}
 				dispatch(setCurrencyAndValue(data))
-				// console.log(data)
 			})
 	}
 }
@@ -61,8 +65,8 @@ type CurrencyRateType = {
 
 export type CurrenciesDataType = {
 	currency: string,
-	value: string | number
+	value: string
 }
 
 type ActionsType = ReturnType<typeof setCurrencyAndValue>
-| ReturnType<typeof setFavoriteCurrencies>
+	| ReturnType<typeof setFavoriteCurrencies>

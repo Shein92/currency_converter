@@ -38,17 +38,14 @@ export const getCurrencies = () => {
 	return (dispatch: Dispatch) => {
 		currency.getCurrencies()
 			.then(res => {
-				const a = res.data;
-				// const rates = Object.assign(a);
 				let data = [];
-				for (let key in a) {
+				for (let key in res.data) {
 					let newObj = {
 						currency: key,
-						symbol: a[key].symbol
+						symbol: res.data[key].symbol
 					}
 					data.push(newObj)
 				}
-				// console.log(data);
 				dispatch(setCurrencyData(data));
 			})
 	}

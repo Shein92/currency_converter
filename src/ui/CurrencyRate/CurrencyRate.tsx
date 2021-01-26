@@ -10,7 +10,6 @@ const CurrencyRate = React.memo(() => {
 	const currencyData = useSelector<AppRootStateType, Array<CurrenciesDataType>>(d => d.currency.currnciesData);
 	const favoriteCurrencyData = useSelector<AppRootStateType, Array<CurrenciesDataType>>(d => d.currency.favoriteCurrenciesData);
 	const dispatch = useDispatch();
-	console.log(favoriteCurrencyData);
 
 	useEffect(() => {
 		dispatch(getCurrencyAndValue(baseCurrency))

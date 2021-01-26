@@ -12,12 +12,24 @@ const initialState: CurrencyRateType = {
 export const currenctRateReducer = (state: CurrencyRateType = initialState, action: ActionsType) => {
 	switch (action.type) {
 		case 'SET-CURRENCY-AND-VALUE': {
-			return { ...state, currnciesData: [...action.data] }
+			let newVal = state.favoriteCurrenciesData.map(item => {
+				
+				if(state.favoriteCurrenciesData.length > 0) {
+					for(let i = 0; i < action.data.length; i++) {
+						if (item.currency === action.data[i].currency) {
+							item.value = action.data[i].value
+						}
+					}
+				}
+				return item;
+			});
+			
+			return { ...state, currnciesData: [...action.data], favoriteCurrenciesData: [...newVal] }
 		}
 		case 'SET-FAVORITE-CURRENCIES': {
 			for (let i = 0; i < state.favoriteCurrenciesData.length; i++) {
 				if (state.favoriteCurrenciesData[i].currency === action.curr) {
-					return { ...state }
+					return { ...state } 
 				}
 			}
 
@@ -52,7 +64,8 @@ export const getCurrencyAndValue = (baseCurrency: string) => {
 					}
 					data.push(newObj)
 				}
-				dispatch(setCurrencyAndValue(data))
+				dispatch(setCurrencyAndValue(data));
+
 			})
 	}
 }

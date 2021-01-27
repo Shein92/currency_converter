@@ -55,7 +55,7 @@ const Converter = React.memo(() => {
 						})}</select>
 					<button className={style.btn} onClick={onBtnClickChangeValue}>LET'S GO</button>
 				</div>
-				<span className={style.totalSum}>Total: {exchangeValue} {firstCur}</span>
+				<span className={style.totalSum}>Total: {exchangeValue} {secondCur}</span>
 			</div>
 		</div>
 	)
